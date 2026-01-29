@@ -1,27 +1,12 @@
-<nav class="navbar navbar-expand-md fixed-top custom-navbar">
-  <div class="container">
-    <a class="navbar-brand" href="/">YashikaLanjewar</a>
-
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#collapsibleNavbar"
-      aria-controls="collapsibleNavbar"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="collapsibleNavbar">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="/work">Work</a></li>
-        <li class="nav-item"><a class="nav-link" href="/photoportfolio">Photography</a></li>
-        <li class="nav-item"><a class="nav-link" href="/poetry">Poetry</a></li>
-        <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
-      </ul>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-dot" aria-hidden="true"></div>
+      <div class="brand-title">WritersJournal</div>
     </div>
-  </div>
-</nav>
+
+    <nav class="navlinks">
+      <a class="{{#if (eq active 'about')}}is-active{{/if}}" href="/about">About</a>
+      <a class="{{#if (eq active 'write')}}is-active{{/if}}" href="/write">Write</a>
+      <a class="{{#if (eq active 'contact')}}is-active{{/if}}" href="/contact">Contact</a>
+    </nav>
+  </header>

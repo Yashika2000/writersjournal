@@ -1,279 +1,186 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const titleEl = document.getElementById("poemTitle");
-  const textEl = document.getElementById("poemText");
-  const buttons = document.querySelectorAll(".toc-item");
+// ---------- Prompts ----------
+const prompts = [
+  "What do I secretly wish someone would understand about me right now?",
+  "What would I do today if I trusted myself 10% more?",
+  "Write a letter to your future self as if she’s already safe and thriving.",
+  "What did I tolerate recently that I’m done tolerating?",
+  "If my feelings were weather, what’s the forecast—and what do I need to carry?",
+  "One moment I’m proud of from the last 7 days—and why it matters.",
+  "What’s one belief I’m ready to release, even if slowly?",
+  "Describe a life that feels soft, beautiful, and honest. What’s one step toward it?",
+  "What do I want to be remembered for (by myself, not the world)?",
+  "Write the truth, then write the kinder truth.",
+];
 
-  // Not on poetry page? Exit safely.
-  if (!titleEl || !textEl || buttons.length === 0) return;
+const promptValue = document.getElementById("promptValue");
+function pickPrompt(){
+  const p = prompts[Math.floor(Math.random() * prompts.length)];
+  promptValue.textContent = p;
+}
+document.getElementById("changePrompt").addEventListener("click", pickPrompt);
 
-  const poems = {
-    featured: {
-      title: "A Set of Three",
-      text: `Three hearts, three souls…
-Entangled in life’s chaotic show.
-Eyes once filled with innocence and love,
-Cries ocean on what has become.
+// ---------- Timer (10 min) ----------
+let timerTotal = 10 * 60;
+let timerLeft = timerTotal;
+let timerId = null;
 
-All that’s left is rage and guilt,
-Questioning everything that was built.
-Each made a promise to stay,
-Only to watch everything fade away.
+const timerDisplay = document.getElementById("timerDisplay");
 
-Love’s no garden of endless roses,
-A fire that burnt fierce, now dark and frozen.
-A desperate plea to stay strong,
-The battle between right and wrong.
+function fmt(s){
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+  return `${String(m).padStart(2,"0")}:${String(r).padStart(2,"0")}`;
+}
+function renderTimer(){ timerDisplay.textContent = fmt(timerLeft); }
 
-Heart or mind—what would be your choice?
-Misery follows regardless, cannot avoid.
-Imprisoned by the hands of fate,
-Inner calling to break free of the torment.
+function startTimer(){
+  if (timerId) return;
+  timerId = setInterval(() => {
+    timerLeft -= 1;
+    if (timerLeft <= 0){
+      timerLeft = 0;
+      stopTimer();
+    }
+    renderTimer();
+  }, 1000);
+}
+function stopTimer(){
+  clearInterval(timerId);
+  timerId = null;
+}
+function resetTimer(){
+  stopTimer();
+  timerLeft = timerTotal;
+  renderTimer();
+}
 
-A heart once broken, torn in pain,
-Piece by piece, you’ll rise again.`
-    },
-    p2: { title: "Ending of a Friendship", text: `Grateful for all the time
-You were there for me,
-In the face of life,
-When you stood beside me.
+document.getElementById("timerStart").addEventListener("click", startTimer);
+document.getElementById("timerPause").addEventListener("click", stopTimer);
+document.getElementById("timerReset").addEventListener("click", resetTimer);
 
-The heartache faded
-Merely by your presence.
-You mended my heart
-By just being a friend.
+renderTimer();
+pickPrompt();
 
-You came in like a pond
-In an endless desert.
-I guess it was just another mirage,
-An illusion that this would last forever.
+// ---------- Calendar + Entries ----------
+const monthTitle = document.getElementById("monthTitle");
+const calendarGrid = document.getElementById("calendarGrid");
+const selectedDateText = document.getElementById("selectedDateText");
+const editor = document.getElementById("editor");
+const saveStatus = document.getElementById("saveStatus");
+const wordCount = document.getElementById("wordCount");
 
-But alas, call me a bad friend—
-I can’t, for I am far too hurt
-By your cheap comments,
-And a nonchalance that hurts.
+const KEY_PREFIX = "journal_entry_";
+let viewDate = new Date();
+let selectedDate = new Date();
 
-There is no point for me to stay,
-Maybe I couldn’t always mend.
-Forgive me, for I don’t know
-How to be a good friend.
+function ymd(d){
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function pretty(d){
+  return d.toLocaleDateString(undefined, { weekday:"short", year:"numeric", month:"short", day:"numeric" });
+}
+function entryKey(d){ return KEY_PREFIX + ymd(d); }
 
-Apologies for all the times
-I hurt you unintentionally,
-Or the times I chose to let go
-Instead of trying, intentionally.
+function updateCounts(){
+  const text = editor.value.trim();
+  const wc = text ? text.split(/\s+/).length : 0;
+  wordCount.textContent = `${wc} word${wc===1?"":"s"}`;
+}
 
-In the hope that you will
-Choose to forgive me,
-And that, my friend,
-Is my final plea.
+function loadEntry(d){
+  const data = localStorage.getItem(entryKey(d)) || "";
+  editor.value = data;
+  updateCounts();
+  saveStatus.textContent = data ? `Loaded: ${ymd(d)}` : `New entry: ${ymd(d)}`;
+}
 
-For I don’t know how to be a friend—
-Please know, I am trying.` },
-    p3: { title: "Trauma to Survive", text: `Demon face, demon touch,
-Fancy dinner, whiskey flush.
-Anxiety dances as he comes close—
-What to do? I froze.
+function saveEntry(d){
+  localStorage.setItem(entryKey(d), editor.value);
+  saveStatus.textContent = `Saved ✓ ${new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"})}`;
+}
 
-Don’t think, it will go away.
-Fooled mind—body says not okay.
-Sleepless, anxious nights,
-Haunting memories, overthinking invites.
-
-Why me? Cry me.
-If only I was not that free.
-Next day, pretend everything is fine,
-While spark and soul slowly die.
-
-Find a distraction from this torture—
-A girl once seeking attention
-Now looks for a corner.
-
-Will these marks turn into scars I keep?
-Will I carry them with me
-As long as I live?` },
-    p4: { title: "Where Are Tears?", text: `As the tension lingers all over my body,
-like I don't have access to my own feelings.
-
-Imprisoned by my own emotions,
-I want an out from this torture,
-praying and hoping
-to see the end of it.
-
-I want to break down and break free,
-close the chapter and finally be me.
-
-Chest pounding, breath racing,
-mind wandering, as I stare at nothing.
-
-Longing for a good cry—
-why am I portraying everything is alright?
-Restlessly searching for tears,
-like a mother looking for her child.
-
-No idea what I am going home to,
-sadness takes over at the thought of you.
-
-When will I be in peace?
-i am done sacrificing my needs.
-For there is no bad blood,
-I just want myself back.` },
-    p5: { title: "Not Today!", text: `I hit the floor,
-for I can no longer
-pretend that I am fine.
-For I just wanna crash
-into someone’s arms.
-
-And break off the shield—
-I no longer wanna portray
-that I have my shit together.
-For I just wanna shed a tear
-into someone’s arms.
-
-When life throws consecutive
-loses in your face,
-when you sense hatered
-in everyone’s face,
-please come as a shelter
-to crash in like a home.
-
-Someone who wants to understand me
-in the world that runs on misunderstanding.
-It’s not like it’s an everyday need,
-but today I look at the sky and plead.
-
-Pillow soaked with salt water.
-It feels overwhelming to carry, so I open
-the gram to scroll away my sufferings.
-
-For I don’t wanna be
-strong independent woman today.
-So I let the algorithm decide
-what ride it wants to take me on.` },
-    p6: { title: "When Fate Doesn’t Align", text: `Maybe if I stopped searching
-for you at every station,
-maybe if I stopped looking
-forward to every function,
-
-hoping you would be there—
-will the fates align?
-Wishing to see you in unknown faces,
-will our paths collide?
-
-What if destiny gave us
-one more chance?
-Praying this time we are
-dealt with winning cards.
-
-Falling in love in this era
-is tricker than ever.
-Exhausted from apps,
-so I keep longing forever.` }
-  };
-
-  buttons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const key = btn.dataset.key;
-
-      if (!poems[key]) {
-        console.error("No poem found for key:", key);
-        return;
-      }
-
-      // active state
-      buttons.forEach((b) => b.classList.remove("is-active"));
-      btn.classList.add("is-active");
-
-      // swap content
-      titleEl.textContent = poems[key].title;
-      textEl.textContent = poems[key].text;
-
-      // on mobile, scroll reader into view
-      if (window.matchMedia("(max-width: 900px)").matches) {
-        titleEl.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    });
-  });
+let saveDebounce = null;
+editor.addEventListener("input", () => {
+  updateCounts();
+  clearTimeout(saveDebounce);
+  saveStatus.textContent = "Saving…";
+  saveDebounce = setTimeout(() => saveEntry(selectedDate), 350);
 });
 
-(() => {
-  const overlay = document.getElementById("projectOverlay");
-  const backdrop = overlay.querySelector(".overlay-backdrop");
-  const closeBtn = overlay.querySelector(".overlay-close");
+document.getElementById("clearEntry").addEventListener("click", () => {
+  editor.value = "";
+  localStorage.removeItem(entryKey(selectedDate));
+  updateCounts();
+  saveStatus.textContent = `Cleared: ${ymd(selectedDate)}`;
+});
 
-  const projectKicker = document.getElementById("projectKicker");
-  const projectHeading = document.getElementById("projectHeading");
-  const projectDesc = document.getElementById("projectDesc");
-  const projectChips = document.getElementById("projectChips");
-  const demoLink = document.getElementById("demoLink");
-  const codeLink = document.getElementById("codeLink");
+document.getElementById("exportTxt").addEventListener("click", () => {
+  const blob = new Blob([editor.value], { type: "text/plain;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `journal-${ymd(selectedDate)}.txt`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
 
-  const PROJECTS = {
-    p1: {
-      kicker: "Web App",
-      title: "Project One",
-      desc: "Write a crisp description here. What problem did it solve? What’s the outcome?",
-      tech: ["HTML", "CSS", "JavaScript"],
-      demo: "https://example.com",
-      code: "https://github.com/yourname/project-one",
-    },
-    p2: {
-      kicker: "Web App",
-      title: "Project Two",
-      desc: "Describe it like a story: goal → approach → result. Keep it short.",
-      tech: ["Node", "Express", "Handlebars"],
-      demo: "https://example.com",
-      code: "https://github.com/yourname/project-two",
-    },
-    p3: {
-      kicker: "Web App",
-      title: "Project Three",
-      desc: "What’s unique about this? Mention 1 standout feature.",
-      tech: ["React", "API", "Deployment"],
-      demo: "https://example.com",
-      code: "https://github.com/yourname/project-three",
-    },
-  };
+function renderCalendar(){
+  const y = viewDate.getFullYear();
+  const m = viewDate.getMonth();
+  const first = new Date(y, m, 1);
+  const last = new Date(y, m+1, 0);
 
-  function openOverlay(key) {
-    const data = PROJECTS[key];
-    if (!data) return;
+  monthTitle.textContent = first.toLocaleDateString(undefined, { month:"long", year:"numeric" });
 
-    projectKicker.textContent = data.kicker;
-    projectHeading.textContent = data.title;
-    projectDesc.textContent = data.desc;
+  const startDow = first.getDay();
+  const daysInMonth = last.getDate();
+  calendarGrid.innerHTML = "";
 
-    projectChips.innerHTML = "";
-    data.tech.forEach((t) => {
-      const chip = document.createElement("span");
-      chip.className = "chip";
-      chip.textContent = t;
-      projectChips.appendChild(chip);
+  for (let i=0; i<startDow; i++){
+    const blank = document.createElement("div");
+    blank.className = "day is-muted";
+    calendarGrid.appendChild(blank);
+  }
+
+  const today = new Date();
+
+  for (let day=1; day<=daysInMonth; day++){
+    const d = new Date(y, m, day);
+    const cell = document.createElement("button");
+    cell.type = "button";
+    cell.className = "day";
+    cell.textContent = String(day);
+
+    if (ymd(d) === ymd(today)) cell.classList.add("is-today");
+    if (ymd(d) === ymd(selectedDate)) cell.classList.add("is-selected");
+
+    const hasEntry = (localStorage.getItem(entryKey(d)) || "").trim().length > 0;
+    if (hasEntry) cell.style.borderColor = "rgba(248,196,46,0.65)";
+
+    cell.addEventListener("click", () => {
+      selectedDate = d;
+      selectedDateText.textContent = pretty(selectedDate);
+      loadEntry(selectedDate);
+      renderCalendar();
     });
 
-    demoLink.href = data.demo;
-    codeLink.href = data.code;
-
-    overlay.classList.add("active");
-    overlay.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
+    calendarGrid.appendChild(cell);
   }
 
-  function closeOverlay() {
-    overlay.classList.remove("active");
-    overlay.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-  }
+  selectedDateText.textContent = pretty(selectedDate);
+}
 
-  document.querySelectorAll(".project-card").forEach((card) => {
-    card.addEventListener("click", () => openOverlay(card.dataset.project));
-  });
+document.getElementById("prevMonth").addEventListener("click", () => {
+  viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth()-1, 1);
+  renderCalendar();
+});
 
-  closeBtn.addEventListener("click", closeOverlay);
-  backdrop.addEventListener("click", closeOverlay);
+document.getElementById("nextMonth").addEventListener("click", () => {
+  viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth()+1, 1);
+  renderCalendar();
+});
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && overlay.classList.contains("active")) {
-      closeOverlay();
-    }
-  });
-})();
+renderCalendar();
+loadEntry(selectedDate);
