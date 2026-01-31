@@ -138,12 +138,47 @@ body{
 /* ---------- Layout ---------- */
 .shell{ max-width: 1180px; margin: 0 auto; padding: 18px; }
 .footer{
+  /* full width bar */
+  width: 100%;
+  margin-top: 24px;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 21, 16, 0.10),
+    rgba(15, 21, 16, 0.22)
+  );
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border-soft);
+
+  /* spacing */
+  padding: 16px 18px;
+
+  /* text */
+  color: var(--text-subheading);
+  font-weight: 700;
+  letter-spacing: 0.4px;
+
+  /* layout */
+  display: flex;
+  justify-content: center;
+}
+
+.footer-text{
+  /* keeps content aligned to your site width */
+  width: 100%;
   max-width: 1180px;
-  margin: 0 auto;
-  padding: 18px;
-  color: var(--gold) !important;
-  display:flex;
-  justify-content:center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  /* ✅ responsive */
+  flex-wrap: wrap;
+  text-align: center;
+
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 /* ---------- Cards + Buttons ---------- */
@@ -338,7 +373,7 @@ body{
   gap: 12px;
   margin-top: 12px;
 }
-label{ display:grid; gap: 6px; color: rgba(255,255,255,0.86); }
+label{ display:grid; gap: 6px; color: var(--text-body); }
 input, textarea{
   width: 100%;
   border-radius: 14px;
