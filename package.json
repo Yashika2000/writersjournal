@@ -1,19 +1,17 @@
 {
-  "name": "personalwebsite",
+  "name": "writer-sanctuary",
   "version": "1.0.0",
-  "description": "Making personal website",
-  "license": "ISC",
-  "author": "Yashika Lanjewar",
-  "type": "commonjs",
+  "description": "A calm literary writing platform built with Express and Handlebars.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
-    "express": "^5.2.1",
-    "express-handlebars": "^8.0.4"
+    "express": "^4.19.2",
+    "express-handlebars": "^7.1.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.4"
   }
 }

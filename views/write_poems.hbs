@@ -1,0 +1,25 @@
+<div class="app-layout">
+  {{> sidebar}}
+
+  <div class="editor-page">
+    <section class="writer-prompt-card">
+      <div class="div1">
+        <p class="prompt-label">Today’s prompt</p>
+          <h2 id="writingPrompt">
+            Write about a memory that still feels like yesterday.
+          </h2>
+          <button type="button" id="regeneratePromptBtn" class="secondary-btn">
+            Regenerate prompt
+          </button>
+      </div>
+          <div class="div2">
+            <aside class="timer-widget"><div class="ring"><span id="timerDisplay">10:00</span><button data-start-timer>Start</button></div></aside>
+          </div>
+        </section>
+    <main class="editor-wrap">
+        
+      <textarea id="writerArea" placeholder="Begin your thoughts..."></textarea>
+    </main>
+    <footer class="editor-footer"><span id="wordCount">0 words</span><button class="btn btn-ghost" id="newPromptBtn">New Prompt</button><a class="btn btn-primary" href="/prompts">Prompts</a></footer>
+  </div>
+</div>

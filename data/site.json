@@ -1,0 +1,27 @@
+{
+  "user": { "name": "Yashika", "email": "ylanjewar00@gmail.com", "streak": 12, "stories": 12, "poems": 18 },
+  "features": [
+    { "icon": "✍", "title": "Daily Prompts", "text": "Find inspiration when the page feels too quiet." },
+    { "icon": "⏱", "title": "10-Minute Timer", "text": "A gentle writing sprint to move through writer’s block." },
+    { "icon": "◌", "title": "Track Progress", "text": "Build a writing habit without aggressive gamification." },
+    { "icon": "☾", "title": "Beautiful Themes", "text": "Change your space to match your mood." }
+  ],
+  "writings": [
+    { "title": "The night I understood the silence", "date": "May 18, 2026", "tag": "Poem" },
+    { "title": "Letters to tomorrow", "date": "May 17, 2026", "tag": "Story" },
+    { "title": "Fragments of a mind", "date": "May 16, 2026", "tag": "Poem" }
+  ],
+  "blogs": [
+    { "title": "How to Build a Writing Habit That Lasts", "date": "May 16, 2026", "read": "5 min read", "image": "paper" },
+    { "title": "The Art of Showing, Not Telling", "date": "May 14, 2026", "read": "4 min read", "image": "book" },
+    { "title": "Finding Your Unique Writing Voice", "date": "May 10, 2026", "read": "6 min read", "image": "typewriter" }
+  ],
+  "prompts": [
+    "Write about a memory that still feels like yesterday.",
+    "Describe a room that remembers everything you forgot.",
+    "Write a letter you will never send.",
+    "Begin with: The rain knew before I did.",
+    "Write about a place that still remembers you.",
+    "Describe heartbreak without using the word love."
+  ]
+}

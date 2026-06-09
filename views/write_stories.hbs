@@ -1,0 +1,10 @@
+<div class="app-layout">
+  {{> sidebar}}
+  <div class="editor-page">
+    <main class="editor-wrap">
+      <textarea id="writerArea" placeholder="Begin your thoughts..."></textarea>
+      <aside class="timer-widget"><div class="ring"><span id="timerDisplay">10:00</span><button data-start-timer>Start</button></div></aside>
+    </main>
+    <footer class="editor-footer"><span id="wordCount">0 words</span><button class="btn btn-ghost" id="newPromptBtn">New Prompt</button><a class="btn btn-primary" href="/prompts">Prompts</a></footer>
+  </div>
+</div>

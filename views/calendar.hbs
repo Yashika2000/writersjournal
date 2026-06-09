@@ -1,0 +1,11 @@
+<div class="app-layout">
+  {{> sidebar}}
+  <main class="main-panel">
+    <div class="section-head"><h1>May 2026</h1><button class="btn btn-ghost">Today</button></div>
+    <section class="calendar glass-card">
+      <div class="weekdays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </section>
+    <section class="streak-card glass-card"><h2>Your Streak</h2><strong>{{user.streak}} days</strong><p>Keep it going — consistency is the key to growth.</p></section>
+  </main>
+</div>

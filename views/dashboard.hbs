@@ -1,0 +1,22 @@
+<div class="app-layout">
+  {{> sidebar}}
+  <main class="dashboard main-panel">
+    <div class="panel-header">
+      <div>
+        <h1>Good morning, {{user.name}} 🕊</h1>
+      </div>
+      <a class="btn btn-primary" href="/write_poems">Start Writing</a>
+    </div>
+    <section class="stats-grid">
+      <article class="glass-card"><p>Writing Streak</p><h2>{{user.streak}} <span>days</span></h2><div class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+      <article class="quote-card">“Fill your paper with the breathings of your heart.”<small>— William Wordsworth</small></article>
+    </section>
+    <section class="two-column">
+      <div class="glass-card">
+        <div class="section-head"><h2>Recent Writings</h2><a href="/write_poems">View all</a></div>
+        {{#each writings}}<div class="writing-row"><div><strong>{{title}}</strong><small>{{date}}</small></div><span>{{tag}}</span></div>{{/each}}
+      </div>
+      <div class="glass-card progress"><p>Your Progress</p><h2>{{user.stories}}</h2><span>Stories</span><h2>{{user.poems}}</h2><span>Poems</span></div>
+    </section>
+  </main>
+</div>

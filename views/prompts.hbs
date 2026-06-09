@@ -1,0 +1,12 @@
+<div class="app-layout">
+  {{> sidebar}}
+  <main class="main-panel">
+    <h1>Daily Prompt</h1>
+    <section class="prompt-big glass-card">
+      <p id="promptText">“{{prompts.[0]}}”</p>
+      <button class="btn btn-primary" id="regeneratePrompt">Regenerate</button>
+    </section>
+    <h2>More Prompts</h2>
+    <div class="prompt-grid">{{#each prompts}}<article class="mini-card">{{this}}</article>{{/each}}</div>
+  </main>
+</div>

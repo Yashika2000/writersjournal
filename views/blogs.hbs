@@ -1,0 +1,8 @@
+<div class="app-layout">
+  {{> sidebar}}
+  <main class="main-panel blog-page">
+    <p class="eyebrow">Writing · Stories · Poetry · Techniques</p>
+    <h1>Latest from the Blog</h1>
+    <section class="blog-list">{{#each blogs}}<article class="blog-card glass-card"><div class="blog-thumb {{image}}"></div><div><h2>{{title}}</h2><p>{{date}} · {{read}}</p><a href="#">Read More →</a></div></article>{{/each}}</section>
+  </main>
+</div>
