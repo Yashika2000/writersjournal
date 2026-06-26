@@ -41,23 +41,77 @@ writerArea?.addEventListener('input', () => {
 if (writerArea) writerArea.value = localStorage.getItem('writer-draft') || '';
 if (writerArea) writerArea.dispatchEvent(new Event('input'));
 
-let timerInterval;
+let timerInterval = null;
+let seconds = 10 * 60;
+let isTimerRunning = false;
+
+const timerButtons = document.querySelectorAll('[data-start-timer]');
+
+function updateTimerDisplay() {
+  const displays = [
+    document.getElementById('timerDisplay'),
+    document.getElementById('miniTimer')
+  ].filter(Boolean);
+
+  const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const sec = String(seconds % 60).padStart(2, '0');
+
+  displays.forEach(display => {
+    display.textContent = `${min}:${sec}`;
+  });
+}
+
 function startTimer() {
-  clearInterval(timerInterval);
-  let seconds = 10 * 60;
-  const displays = [document.getElementById('timerDisplay'), document.getElementById('miniTimer')].filter(Boolean);
+  isTimerRunning = true;
+
+  timerButtons.forEach(btn => {
+    btn.innerHTML = '⏸';
+    btn.classList.add('is-running');
+    btn.classList.remove('is-paused');
+  });
+
   timerInterval = setInterval(() => {
     seconds -= 1;
-    const min = String(Math.floor(seconds / 60)).padStart(2, '0');
-    const sec = String(seconds % 60).padStart(2, '0');
-    displays.forEach(display => display.textContent = `${min}:${sec}`);
+    updateTimerDisplay();
+
     if (seconds <= 0) {
       clearInterval(timerInterval);
+      timerInterval = null;
+      isTimerRunning = false;
+      seconds = 10 * 60;
+      updateTimerDisplay();
+
+      timerButtons.forEach(btn => {
+        btn.innerHTML = '▶';
+        btn.classList.remove('is-running', 'is-paused');
+      });
+
       alert('Your 10-minute writing sprint is complete. Save what surprised you.');
     }
   }, 1000);
 }
-document.querySelectorAll('[data-start-timer]').forEach(btn => btn.addEventListener('click', startTimer));
+
+function pauseTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  isTimerRunning = false;
+
+  timerButtons.forEach(btn => {
+    btn.innerHTML = '▶';
+    btn.classList.remove('is-running');
+    btn.classList.add('is-paused');
+  });
+}
+
+timerButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (isTimerRunning) {
+      pauseTimer();
+    } else {
+      startTimer();
+    }
+  });
+});
 
 const calendarGrid = document.getElementById('calendarGrid');
 if (calendarGrid) {
@@ -68,3 +122,4 @@ if (calendarGrid) {
     calendarGrid.appendChild(day);
   }
 }
+
